@@ -8,6 +8,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.UUID;
+
 /**
  * The type Endereco service.
  */
@@ -16,6 +19,16 @@ import org.springframework.stereotype.Service;
 public class EnderecoService {
 
     private final EnderecoRepository repository;
+
+    /**
+     * Find by pessoa list.
+     *
+     * @param pessoaId the pessoa id
+     * @return the list
+     */
+    public List<Endereco> findByPessoa(UUID pessoaId) {
+        return repository.findByPessoa(pessoaId);
+    }
 
     /**
      * Save endereco.

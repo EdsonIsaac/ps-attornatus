@@ -16,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * The type Pessoa controller.
@@ -95,7 +94,7 @@ public class PessoaController {
      */
     @GetMapping("/{id}/enderecos")
     public ResponseEntity findAll(@PathVariable UUID id) {
-        var enderecos = PessoaDTO.toDTO(pessoaService.findById(id)).enderecos();
+        var enderecos = enderecoService.findByPessoa(id).stream().map(e -> EnderecoDTO.toDTO(e)).toList();
         return ResponseEntity.status(HttpStatus.OK).body(enderecos);
     }
 
@@ -113,17 +112,14 @@ public class PessoaController {
             throw new ObjectNotFoundException(MessageUtils.PESSOA_NOT_FOUND);
         }
 
-        var pessoa = pessoaService.findById(id);
-
         if (endereco.getPrincipal()) {
 
-            if (pessoa.getEnderecos() != null && pessoa.getEnderecos().size() > 0) {
+            var enderecos = enderecoService.findByPessoa(id);
 
-                pessoa.getEnderecos().forEach(e -> {
-                    e.setPrincipal(false);
-                    enderecoService.save(e);
-                });
-            }
+            enderecos.forEach(e -> {
+                e.setPrincipal(false);
+                enderecoService.save(e);
+            });
         }
 
         var enderecoSaved = EnderecoDTO.toDTO(enderecoService.save(endereco));
@@ -150,11 +146,11 @@ public class PessoaController {
             throw new ObjectNotFoundException(MessageUtils.ENDERECO_NOT_FOUND);
         }
 
-        var pessoa = pessoaService.findById(id);
-
         if (endereco.getPrincipal()) {
 
-            pessoa.getEnderecos().forEach(e -> {
+            var enderecos = enderecoService.findByPessoa(id);
+
+            enderecos.forEach(e -> {
                 e.setPrincipal(false);
                 enderecoService.save(e);
             });
