@@ -15,6 +15,15 @@ import java.util.UUID;
 public interface EnderecoRepository extends JpaRepository<Endereco, UUID> {
 
     /**
+     * Exists by pessoa boolean.
+     *
+     * @param pessoaId the pessoa id
+     * @return the boolean
+     */
+    @Query("SELECT CASE WHEN count(e)> 0 THEN TRUE ELSE FALSE END FROM tb_enderecos AS e WHERE e.pessoa.id = ?1")
+    boolean existsByPessoa(UUID pessoaId);
+
+    /**
      * Find by pessoa list.
      *
      * @param pessoaId the pessoa id

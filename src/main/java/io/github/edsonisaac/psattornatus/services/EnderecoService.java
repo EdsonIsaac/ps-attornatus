@@ -1,6 +1,7 @@
 package io.github.edsonisaac.psattornatus.services;
 
 import io.github.edsonisaac.psattornatus.entities.Endereco;
+import io.github.edsonisaac.psattornatus.exceptions.ObjectNotFoundException;
 import io.github.edsonisaac.psattornatus.exceptions.ValidationException;
 import io.github.edsonisaac.psattornatus.repositories.EnderecoRepository;
 import io.github.edsonisaac.psattornatus.utils.MessageUtils;
@@ -27,6 +28,11 @@ public class EnderecoService {
      * @return the list
      */
     public List<Endereco> findByPessoa(UUID pessoaId) {
+
+        if (!repository.existsByPessoa(pessoaId)) {
+            throw new ObjectNotFoundException(MessageUtils.PESSOA_NOT_FOUND);
+        }
+
         return repository.findByPessoa(pessoaId);
     }
 

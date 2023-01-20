@@ -152,7 +152,7 @@ class PessoaControllerTest {
         var pessoa = getPessoa();
         pessoa.setEnderecos(Set.of(getEndereco(), getEndereco()));
 
-        when(pessoaService.findById(any())).thenReturn(pessoa);
+        when(enderecoService.findByPessoa(any())).thenReturn(List.copyOf(pessoa.getEnderecos()));
 
         var result = this.mvc.perform(
                         get("/pessoas/" + pessoa.getId() + "/enderecos"))
@@ -192,7 +192,7 @@ class PessoaControllerTest {
     @DisplayName("Não deve retornar endereços quando o ID não é encontrado")
     public void shouldNotReturnEnderecosWhenIDNotFound() throws Exception {
 
-        when(pessoaService.findById(any())).thenThrow(ObjectNotFoundException.class);
+        when(enderecoService.findByPessoa(any())).thenThrow(ObjectNotFoundException.class);
 
         this.mvc.perform(
                         get("/pessoas/5fed0901-8f2c-4a1a-86b6-1756900f891e/enderecos"))
